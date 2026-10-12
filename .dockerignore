@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+storage
+test-storage
+.git
+.env
+.env.local
+*.db
+*.db-journal
+coverage
+README.md
+tests
+vitest.config.ts

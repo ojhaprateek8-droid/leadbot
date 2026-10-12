@@ -1,0 +1,29 @@
+services:
+  callaudit:
+    build: .
+    image: callaudit-ai:latest
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: file:/data/dev.db
+      AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET in .env before starting}
+      STORAGE_DIR: /data/storage
+      STT_PROVIDER: ${STT_PROVIDER:-mock}
+      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-100}
+      WORKER_ENABLED: 'true'
+      JOB_MAX_ATTEMPTS: '3'
+    volumes:
+      - callaudit-data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:3000/api/v1/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  callaudit-data:
